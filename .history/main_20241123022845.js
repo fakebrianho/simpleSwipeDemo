@@ -3,8 +3,6 @@ import * as THREE from 'three'
 import { addBoilerPlateMesh, addStandardMesh } from './addMeshes'
 import { addLight } from './addLights'
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls'
-
-//Here we grab the wheel adaptor from three-story controls, this is what will allow us to trigger events based on swipes.
 import { WheelAdaptor } from 'three-story-controls'
 import gsap from 'gsap'
 
@@ -22,51 +20,32 @@ camera.position.set(0, 0, 5)
 const meshes = {}
 const lights = {}
 const controls = new OrbitControls(camera, renderer.domElement)
-
-//for the sake of this demo I just have our default position of 0, 0, 5 and our preset location of 2, 0, 3
-//we could very easily have an array of more positions corresponding to more elements etc, if you're trying to shift back and forth between two positions this will do however.
-let cameraPositions = [
+let positions = [
 	{ x: 0, y: 0, z: 5 },
-	{ x: 3, y: 0, z: 2 },
-]
-
-let viewPositions = [
-	{ x: 0, y: 0, z: 0 },
-	{ x: 2, y: 0, z: 0 },
+	{ x: 2, y: 0, z: 3 },
 ]
 let count = 0
-
-//we're gonna disable all the manual aspects of the camera for now to make it easy
 controls.enablePan = false
 controls.enableZoom = false
 controls.enableRotate = false
-
-//to use our wheelAdaptor we just store a new instance in a variable and call the connect() function
 const wheelAdaptor = new WheelAdaptor({ type: 'discrete' })
 wheelAdaptor.connect()
-
-//afterworks it's quite simple, we listen for something called trigger, trigger in this case will be whenever we swipe once on the mouse pad.
 wheelAdaptor.addEventListener('trigger', () => {
-	//inside our event listener code we're going to use gsap and we want to make sure that we don't accidentally trigger multiple animations overwriting each other so we can check if gsap is tweening, aka is gsap currently in the middle of an animation sequence, if yes, then return early don't trigger another sequence.
 	if (gsap.isTweening(camera.position) || gsap.isTweening(controls.target)) {
 		return
 	}
-
-	//we increment our count by 1 and use the modulo to make sure we stay in bounds. count = (0 + 1) % 2 leaves remainder 1. count = (1 + 1) % 2 leaves remainder 0 etc.
-	count = (count + 1) % cameraPositions.length
-
-	//here we use gsap to change where our controls are looking and where our camera is positioned.
+	count = (count + 1) % positions.length
 	gsap.to(controls.target, {
-		x: viewPositions[count].x,
-		y: viewPositions[count].y,
-		z: viewPositions[count].z,
+		x: positions[count].x,
+		y: positions[count].y,
+		z: positions[count].z,
 		ease: 'power3.inOut',
 		duration: 2,
 	})
 	gsap.to(camera.position, {
-		x: cameraPositions[count].x,
-		y: cameraPositions[count].y,
-		z: cameraPositions[count].z,
+		x: positions[count].x,
+		y: positions[count].y,
+		z: positions[count].z,
 		ease: 'power3.inOut',
 		duration: 2,
 	})
@@ -114,6 +93,5 @@ function animate() {
 
 	// meshes.default.scale.x += 0.01
 
-	controls.update()
 	renderer.render(scene, camera)
 }

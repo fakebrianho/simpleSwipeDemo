@@ -27,7 +27,7 @@ const controls = new OrbitControls(camera, renderer.domElement)
 //we could very easily have an array of more positions corresponding to more elements etc, if you're trying to shift back and forth between two positions this will do however.
 let cameraPositions = [
 	{ x: 0, y: 0, z: 5 },
-	{ x: 3, y: 0, z: 2 },
+	{ x: 2, y: 0, z: 3 },
 ]
 
 let viewPositions = [
@@ -53,7 +53,7 @@ wheelAdaptor.addEventListener('trigger', () => {
 	}
 
 	//we increment our count by 1 and use the modulo to make sure we stay in bounds. count = (0 + 1) % 2 leaves remainder 1. count = (1 + 1) % 2 leaves remainder 0 etc.
-	count = (count + 1) % cameraPositions.length
+	count = (count + 1) % positions.length
 
 	//here we use gsap to change where our controls are looking and where our camera is positioned.
 	gsap.to(controls.target, {
@@ -114,6 +114,5 @@ function animate() {
 
 	// meshes.default.scale.x += 0.01
 
-	controls.update()
 	renderer.render(scene, camera)
 }

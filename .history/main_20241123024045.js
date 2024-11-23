@@ -62,6 +62,7 @@ wheelAdaptor.addEventListener('trigger', () => {
 		z: viewPositions[count].z,
 		ease: 'power3.inOut',
 		duration: 2,
+		// onComplete: () => controls.update(),
 	})
 	gsap.to(camera.position, {
 		x: cameraPositions[count].x,
